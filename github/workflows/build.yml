@@ -1,0 +1,23 @@
+name: Final Build
+on: [workflow_dispatch, push]
+jobs:
+build:
+runs-on: ubuntu-latest
+steps:
+ - uses: actions/checkout@v3
+ - uses: subosito/flutter-action@v2
+with:
+flutter-version: '3.x'
+- run: |
+echo "dependency_overrides:
+collection: 1.18.0" >> pubspec.yaml
+flutter pub get
+- run: flutter build appbundle --release --no-codesign
+- name: Upload AAB
+uses: actions/upload-artifact@v3
+with:
+name: aab-file
+path: build/app/outputs/bundle/release/app-release.aab
+
+
+
